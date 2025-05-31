@@ -4,6 +4,7 @@ const serviceSchema = new mongoose.Schema({
     email: { type: String, required: true },
     predictions: [{
         id: { type: String, required: true },
+        chatID: { type: String, required: false },
         name: { type: String, required: false },
         description: { type: String, required: false },
         project: { type: String, required: true },
@@ -16,10 +17,11 @@ const serviceSchema = new mongoose.Schema({
         }]
     }],
     chatSession: [{
-        lastUpdated: { type: Date, required: true },
+        predictionID: { type: String, required: false },
         chatData: [{
             content: { type: String, required: true },
-            role: { type: String, required: true }
+            role: { type: String, required: true },
+            time: { type: Date, required: true }
         }]
     }]
 });

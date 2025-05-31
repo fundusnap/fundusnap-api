@@ -13,9 +13,7 @@ const create = async (req, res) => {
         }
 
         const type = await fileType.fileTypeFromBuffer(req.body);
-
-        console.log(type);
-
+        
         if (!type || !type.mime.startsWith('image/')) {
             return res.status(400).json({
                 status: 'error',
@@ -138,9 +136,10 @@ const read = async (req, res) => {
             });
         }
 
-        let data = getService.predictions[0];
-
-        data["imageURL"] = `https://cdn.fundusmap.com/predict/${data.id}`;
+        let data = getService.predictions[0].toObject();
+        delete data._id;
+        data.predictions = data.predictions.map(({_id, ...keys}) => keys);
+        data.imageURL = `https://cdn.fundusmap.com/predict/${data.id}`;
 
         res.status(200).json({
             status: "success",
@@ -159,14 +158,12 @@ const read = async (req, res) => {
 
 const update = async (req, res) => {
     try {
-        const { id  } = req.params;
+        const { id, name, description } = req.body;
 
-        if (!id) {
-            let invalidItems = [];
-            if (!distance) invalidItems.push('"id"');
+        if (!name && !description) {
             return res.status(400).json({
                 status: 'error',
-                message: `Parameter ${invalidItems.join(", ")} required`,
+                message: `One of parameter "name" or "description" must be included`,
                 data: {}
             });
         }
@@ -183,10 +180,21 @@ const update = async (req, res) => {
             });
         }
 
+        const updatedService = await Service.findOneAndUpdate(
+            { email: req.user.email, "predictions.id": id },
+            { $set: { "predictions.$.name": name || getService.predictions[0].name, "predictions.$.description": description || getService.predictions[0].description } },
+            { new: true }
+        );
+
+        let data = updatedService.predictions.filter((predict)=>{return predict.id == id})[0].toObject();
+        delete data._id;
+        data.predictions = data.predictions.map(({_id, ...keys}) => keys);
+        data.imageURL = `https://cdn.fundusmap.com/predict/${data.id}`;
+
         res.status(200).json({
             status: "success",
-            message: "Successfuly read chat data",
-            data: getService
+            message: "Successfuly update prediction data",
+            data: data
         });
     } catch(err) {
         console.error(err);
