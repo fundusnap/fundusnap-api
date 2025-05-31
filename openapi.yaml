@@ -1,0 +1,207 @@
+openapi: 3.0.0
+info:
+  title: Fundusnap Core API
+  description: Fundusnap is a mobile app that helps you identify signs of diabetic retinopathy
+  version: 1.0.0
+servers:
+  - url: https://api.fundusnap.com
+    description: Production Server
+  - url: http://localhost:8080
+    description: Local Development Server
+paths:
+  /user/auth/email/login:
+    post:
+      tags:
+        - user/auth/email
+      summary: Email Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: dev@fundusnap.com
+                password: testtest
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /user/auth/email/register:
+    post:
+      tags:
+        - user/auth/email
+      summary: Email Register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: dev@fundusnap.com
+                password: testtest
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /user/auth/refresh-token:
+    get:
+      tags:
+        - user/auth
+      summary: Refresh Token
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /user/auth/email/forgot-password:
+    post:
+      tags:
+        - user/auth/email
+      summary: Forgot Password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: dev@fundusnap.com
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /user/auth/email/change-password:
+    put:
+      tags:
+        - user/auth/email
+      summary: Change Password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                password: newpass
+                token: >-
+                  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZpdEBmYWl6LmF0IiwiaXNGb3Jnb3RQYXNzd29yZCI6dHJ1ZSwiaWF0IjoxNzQxOTA0NTA1LCJleHAiOjE3NDE5MTg5MDV9.4as89NRHUwwbsoweiFtaZxnJ6rflnUNefRNmpcie2U4
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /service/predict/create:
+    post:
+      tags:
+        - service/predict
+      summary: Create Prediction
+      requestBody:
+        content:
+          text/plain: {}
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/octet-stream
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /service/predict/list:
+    get:
+      tags:
+        - service/predict
+      summary: List Prediction
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /service/predict/read/:id:
+    get:
+      tags:
+        - service/predict
+      summary: Read Prediction by id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /service/predict/update:
+    put:
+      tags:
+        - service/predict
+      summary: Update Prediction by id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                id: 0f113162-7197-48ef-b484-91324fa2a779
+                name: Custom Name
+                description: Custom Description
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /service/chat/create:
+    post:
+      tags:
+        - service/chat
+      summary: Chatbot Create New Chat
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                predictionID: 0cb31d4c-7dcf-43c1-9863-9a03c8b8fe4b
+                query: Explain my diabetic retinopathy probability
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /service/chat/list:
+    get:
+      tags:
+        - service/chat
+      summary: Chatbot List All Chat
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /service/chat/read/:id:
+    get:
+      tags:
+        - service/chat
+      summary: Chatbot Read Chat
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /service/chat/reply:
+    put:
+      tags:
+        - service/chat
+      summary: Chatbot Reply Chat
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                id: 683ad1988b4d2eba5f2b393e
+                query: Is there a chance it could be fatal?
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}

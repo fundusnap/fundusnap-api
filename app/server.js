@@ -20,8 +20,8 @@ app.use('/user', userRouter);
 const serviceRouter = require('./domains/services/services.router');
 app.use('/service', serviceRouter);
 
-// app.get('/', function(req, res) {
-//   res.sendFile(path.join(__dirname, 'templates/pages/index.html'));
-// });
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname, 'templates/pages/index.html'));
+});
 
 module.exports = app;
