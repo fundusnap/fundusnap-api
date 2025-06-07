@@ -1,5 +1,5 @@
 const Service = require('../services.model').Service;
-const uplaodImageBuffer = require('../../../configs/storage/s3/r2');
+const uplaodImageBuffer = require('../../../configs/storage/azure/blobStorage');
 const fileType = require('file-type');
 
 const create = async (req, res) => {

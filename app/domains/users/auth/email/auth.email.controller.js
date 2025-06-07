@@ -3,7 +3,9 @@ const Service = require('../../../services/services.model').Service;
 
 const bcrypt = require('bcrypt');
 const { signAccessToken, signRefreshToken } = require('../../../../utils/auth/jwt/sign');
-const verifyJWT = require('../../../../utils/auth/jwt/verify');
+const verifyAccessToken = require('../../../../utils/auth/jwt/verify');
+const mailrenderer = require('../../../../utils/mail/renderer');
+const mailsender = require('../../../../utils/mail/sender');
 
 const register = async (req, res) => {
     try {
@@ -136,30 +138,14 @@ const forgot = async (req, res) => {
             });
         }
 
-        if (!getUser.isEmailVerified) {
-            return res.status(400).json({
-                status: 'error',
-                message: process.env.DEBUG ? "Email is not yet verified" : "Invalid Credentials",
-                data: {}
-            });
-        }
-
-        if (!getUser.isRegistered) {
-            return res.status(400).json({
-                status: 'error',
-                message: process.env.DEBUG ? "User is not yet registered" : "Invalid Credentials",
-                data: {}
-            });
-        }
-
-        const verificationToken = signToken({
+        const verificationToken = signAccessToken({
             email: email,
             isForgotPassword: true
-        });
+        }, '1h');
 
         
         const html = await mailrenderer('reset', {
-            reset_url: `${process.env.FE_HOST}/changepassword?token=${encodeURIComponent(verificationToken)}`
+            reset_url: `https://api.fundusnap.com/changepassword?token=${encodeURIComponent(verificationToken)}`
         });
 
         await mailsender.sendmail({
@@ -197,7 +183,7 @@ const change = async (req, res) => {
             });
         }
 
-        const verification = verifyJWT(token);
+        const verification = verifyAccessToken(token);
         if (verification.status == "error") {
             return res.status(401).json({
                 status: "error", 
@@ -208,21 +194,13 @@ const change = async (req, res) => {
             if (verification.data.isForgotPassword) {
                 const getUser = await User.findOne({ email: verification.data.email });
                 if (getUser) {
-                    if (!getUser.isRegistered) {
-                        return res.status(400).json({
-                            status: "error", 
-                            message: "User is not registered",
-                            data: {}
-                        });
-                    } else {
-                        getUser.password = await bcrypt.hash(password, 10);
-                        getUser.save();
-                        return res.status(200).json({
-                            status: "success", 
-                            message: "User password changed",
-                            data: {}
-                        });
-                    }
+                    getUser.password = await bcrypt.hash(password, 10);
+                    getUser.save();
+                    return res.status(200).json({
+                        status: "success", 
+                        message: "User password changed",
+                        data: {}
+                    });
                 } else {
                     return res.status(401).json({
                         status: "error", 
