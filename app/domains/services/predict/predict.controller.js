@@ -1,5 +1,5 @@
 const Service = require('../services.model').Service;
-const uplaodImageBuffer = require('../../../configs/storage/azure/blobStorage');
+const { uploadImageBuffer, getBlobUrl } = require('../../../configs/storage/azure/blobStorage');
 const fileType = require('file-type');
 
 const create = async (req, res) => {
@@ -59,9 +59,8 @@ const create = async (req, res) => {
 
         const id = newPrediction.predictions.slice(-1)[0].id;
 
-        const imageURL = await uplaodImageBuffer(req.body, id, type.mime);
-
-        data["imageURL"] = imageURL;
+        const blobName = await uploadImageBuffer(req.body, id, type.mime);
+        data["imageURL"] = await getBlobUrl(id);
 
         res.status(200).json({
             status: "success",
@@ -89,16 +88,18 @@ const list = async (req, res) => {
             });
         }
 
+        const predictions = await Promise.all(getService.predictions.map(async (prediction) => ({
+            id: prediction.id,
+            name: prediction.name,
+            description: prediction.description,
+            created: prediction.created,
+            imageURL: await getBlobUrl(prediction.id)
+        })));
+
         res.status(200).json({
             status: "success",
             message: "Successfuly list created diabetic retinopathy prediction",
-            data: getService.predictions.map((prediction) => ({
-                    id: prediction.id,
-                    name: prediction.name,
-                    description: prediction.description,
-                    created: prediction.created,
-                    imageURL: `https://cdn.fundusmap.com/predict/${prediction.id}`
-            }))
+            data: predictions
         });
     } catch(err) {
         console.error(err);
@@ -139,7 +140,7 @@ const read = async (req, res) => {
         let data = getService.predictions[0].toObject();
         delete data._id;
         data.predictions = data.predictions.map(({_id, ...keys}) => keys);
-        data.imageURL = `https://cdn.fundusmap.com/predict/${data.id}`;
+        data.imageURL = await getBlobUrl(data.id);
 
         res.status(200).json({
             status: "success",
@@ -189,7 +190,7 @@ const update = async (req, res) => {
         let data = updatedService.predictions.filter((predict)=>{return predict.id == id})[0].toObject();
         delete data._id;
         data.predictions = data.predictions.map(({_id, ...keys}) => keys);
-        data.imageURL = `https://cdn.fundusmap.com/predict/${data.id}`;
+        data.imageURL = await getBlobUrl(data.id);
 
         res.status(200).json({
             status: "success",
