@@ -1,5 +1,5 @@
 {
-  "name": "fundusnap",
+  "name": "fundusnap-api",
   "version": "1.0.0",
   "main": "app/index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   },
   "author": "Fundusnap Developers <dev@fundunsnap.com>",
   "license": "MIT",
-  "description": "",
+  "description": "Fundusnap API is a backend service for the Fundusnap mobile app that helps you identify signs of diabetic retinopathy",
   "dependencies": {
     "@azure/storage-blob": "^12.27.0",
     "bcrypt": "^6.0.0",

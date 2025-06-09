@@ -20,13 +20,13 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: password
       ME_CONFIG_MONGODB_SERVER: mongodb
 
-  # fundusnap-core:
-  #   build:
-  #     context: .
-  #   ports:
-  #     - "${PORT}:${PORT}"
-  #   env_file:
-  #     - .env
+  fundusnap-core:
+    build:
+      context: .
+    ports:
+      - "${PORT}:${PORT}"
+    env_file:
+      - .env
 
 volumes:
   mongodb_data:
