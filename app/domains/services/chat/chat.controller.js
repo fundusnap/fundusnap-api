@@ -41,10 +41,17 @@ const create = async (req, res) => {
         const messages = [
             { 
                 role: 'system', 
+                content: "You are Fundusnap, an intelligent assistant designed to help users understand the results of AI-powered fundus image analysis. Fundusnap uses a deep learning model to analyze retinal (fundus) photographs for signs of diabetic retinopathy (DR). Your role is to: 1. Explain the meaning and significance of the detected features and the classification result in simple and informative language. 2. Help users understand the risk indicators and encourage follow-up with a healthcare professional when needed. 3. Avoid making medical diagnoses; always recommend consulting an ophthalmologist or doctor for clinical interpretation.",
+                time: new Date()
+            },{ 
+                role: 'system', 
                 content: JSON.stringify(data.predictions.map(({_id, tagId, ...keys}) => keys)) + "\n\nData above is probability of diabetic retinopathy stage acquired using Microsoft Azure custom vision api image classification of a patient's image.",
                 time: new Date()
-            },
-            { 
+            },{ 
+                role: 'system', 
+                content: JSON.stringify(data.detectionArtifacts.map(({_id, box, ...keys}) => keys)) + "\n\nData above is the AI-detected retinal feature from a fundus image, where 'class_name' indicates the type of lesion (e.g., 'Microaneurysm') and 'confidence' reflects the model's certainty in the detection (e.g., 0.33 means 33% confidence).",
+                time: new Date()
+            },{
                 role: 'user', 
                 content: query,
                 time: new Date()

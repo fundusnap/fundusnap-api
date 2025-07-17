@@ -15,6 +15,7 @@
   "description": "Fundusnap API is a backend service for the Fundusnap mobile app that helps you identify signs of diabetic retinopathy",
   "dependencies": {
     "@azure/storage-blob": "^12.27.0",
+    "axios": "^1.10.0",
     "bcrypt": "^6.0.0",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
@@ -22,6 +23,7 @@
     "ejs": "^3.1.10",
     "express": "^4.21.2",
     "file-type": "^21.0.0",
+    "form-data": "^4.0.4",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.2",
     "nodemailer": "^7.0.3"

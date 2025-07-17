@@ -3,12 +3,12 @@ const path = require("path");
 
 const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
 
-const containerClient = blobServiceClient.getContainerClient(process.env.AZURE_CONTAINER_NAME);
+const predictContainerClient = blobServiceClient.getContainerClient("predict");
 
-const uploadImageBuffer = async (buffer, id, mimetype) => {
+const uploadPredictImageBuffer = async (buffer, id, mimetype) => {
     const blobName = id;
     
-    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+    const blockBlobClient = predictContainerClient.getBlockBlobClient(blobName);
     
     await blockBlobClient.upload(buffer, buffer.length, {
         blobHTTPHeaders: {
@@ -19,13 +19,47 @@ const uploadImageBuffer = async (buffer, id, mimetype) => {
     return blobName;
 };
 
-const getBlobUrl = async (blobName) => {
-    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+const getPredictBlobUrl = async (blobName) => {
+    const blockBlobClient = predictContainerClient.getBlockBlobClient(blobName);
     
     // Generate SAS token that expires in 1 hour
     const sasToken = generateBlobSASQueryParameters(
         {
-            containerName: process.env.AZURE_CONTAINER_NAME,
+            containerName: "predict",
+            blobName: blobName,
+            permissions: BlobSASPermissions.parse("r"), // Read only
+            startsOn: new Date(),
+            expiresOn: new Date(new Date().valueOf() + 3600 * 1000), // 1 hour
+        },
+        blobServiceClient.credential
+    ).toString();
+
+    return `${blockBlobClient.url}?${sasToken}`;
+};
+
+const detectContainerClient = blobServiceClient.getContainerClient("detect");
+
+const uploadDetectImageBuffer = async (buffer, id, mimetype) => {
+    const blobName = id;
+    
+    const blockBlobClient = detectContainerClient.getBlockBlobClient(blobName);
+    
+    await blockBlobClient.upload(buffer, buffer.length, {
+        blobHTTPHeaders: {
+            blobContentType: mimetype
+        }
+    });
+
+    return blobName;
+};
+
+const getDetectBlobUrl = async (blobName) => {
+    const blockBlobClient = detectContainerClient.getBlockBlobClient(blobName);
+    
+    // Generate SAS token that expires in 1 hour
+    const sasToken = generateBlobSASQueryParameters(
+        {
+            containerName: "detect",
             blobName: blobName,
             permissions: BlobSASPermissions.parse("r"), // Read only
             startsOn: new Date(),
@@ -38,6 +72,8 @@ const getBlobUrl = async (blobName) => {
 };
 
 module.exports = {
-    uploadImageBuffer,
-    getBlobUrl
+    uploadPredictImageBuffer,
+    getPredictBlobUrl,
+    uploadDetectImageBuffer,
+    getDetectBlobUrl
 };

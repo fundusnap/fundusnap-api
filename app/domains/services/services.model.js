@@ -14,6 +14,16 @@ const serviceSchema = new mongoose.Schema({
             probability: { type: Number, required: true },
             tagId: { type: String, required: true },
             tagName: { type: String, required: true }
+        }],
+        detectionArtifacts: [{
+            class_name: { type: String, required: true },
+            confidence: { type: Number, required: true },
+            box: {
+                x1: { type: Number, required: true },
+                y1: { type: Number, required: true },
+                x2: { type: Number, required: true },
+                y2: { type: Number, required: true }
+            }
         }]
     }],
     chatSession: [{

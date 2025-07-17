@@ -1,6 +1,8 @@
 const Service = require('../services.model').Service;
-const { uploadImageBuffer, getBlobUrl } = require('../../../configs/storage/azure/blobStorage');
+const { uploadPredictImageBuffer, getPredictBlobUrl, uploadDetectImageBuffer, getDetectBlobUrl } = require('../../../configs/storage/azure/blobStorage');
 const fileType = require('file-type');
+const axios = require('axios');
+const FormData = require('form-data');
 
 const create = async (req, res) => {
     try {
@@ -54,17 +56,49 @@ const create = async (req, res) => {
         data["name"] = `New Snap (${getService.predictions.length + 1})`;
         data["description"] = `New Snap (${getService.predictions.length + 1})`;
 
+        const inspectFormData = new FormData();
+        inspectFormData.append('file', req.body, {
+            filename: `image.${type.ext}`,
+            contentType: type.mime
+        });
+
+        const visualizeFormData = new FormData();
+        visualizeFormData.append('file', req.body, {
+            filename: `image.${type.ext}`,
+            contentType: type.mime
+        });
+
+        // Call both endpoints in parallel
+        const [inspectResponse, visualizeResponse] = await Promise.all([
+            axios.post(process.env.FUNDUSNAP_AI_HOST + '/inspect/fundus-artifacts/', inspectFormData, {
+                headers: {
+                    ...inspectFormData.getHeaders()
+                }
+            }),
+            axios.post(process.env.FUNDUSNAP_AI_HOST + '/visualize/fundus-artifacts/', visualizeFormData, {
+                headers: {
+                    ...visualizeFormData.getHeaders()
+                },
+                responseType: 'arraybuffer' // Important for receiving image data
+            })
+        ]);
+        data["detectionArtifacts"] = inspectResponse.data["detections"];
+
         getService.predictions.push(data);
         const newPrediction = await getService.save();
 
         const id = newPrediction.predictions.slice(-1)[0].id;
 
-        const blobName = await uploadImageBuffer(req.body, id, type.mime);
-        data["imageURL"] = await getBlobUrl(id);
+        await uploadPredictImageBuffer(req.body, id, type.mime);
+        data["imageURL"] = await getPredictBlobUrl(id);
+
+        const visualizationImageBuffer = Buffer.from(visualizeResponse.data);
+        await uploadDetectImageBuffer(visualizationImageBuffer, id, 'image/jpeg '); // Assuming visualization returns PNG
+        data["detectionURL"] = await getDetectBlobUrl(id);
 
         res.status(200).json({
             status: "success",
-            message: "Successfuly create diabetic retinopathy prediction's of an image",
+            message: "Successfully create diabetic retinopathy prediction of an image",
             data: data
         });
     } catch(err) {
@@ -93,7 +127,7 @@ const list = async (req, res) => {
             name: prediction.name,
             description: prediction.description,
             created: prediction.created,
-            imageURL: await getBlobUrl(prediction.id)
+            imageURL: await getPredictBlobUrl(prediction.id)
         })));
 
         res.status(200).json({
@@ -117,7 +151,7 @@ const read = async (req, res) => {
 
         if (!id) {
             let invalidItems = [];
-            if (!distance) invalidItems.push('"id"');
+            if (!id) invalidItems.push('"id"');
             return res.status(400).json({
                 status: 'error',
                 message: `Parameter ${invalidItems.join(", ")} required`,
@@ -140,7 +174,7 @@ const read = async (req, res) => {
         let data = getService.predictions[0].toObject();
         delete data._id;
         data.predictions = data.predictions.map(({_id, ...keys}) => keys);
-        data.imageURL = await getBlobUrl(data.id);
+        data.imageURL = await getPredictBlobUrl(data.id);
 
         res.status(200).json({
             status: "success",
@@ -190,7 +224,7 @@ const update = async (req, res) => {
         let data = updatedService.predictions.filter((predict)=>{return predict.id == id})[0].toObject();
         delete data._id;
         data.predictions = data.predictions.map(({_id, ...keys}) => keys);
-        data.imageURL = await getBlobUrl(data.id);
+        data.imageURL = await getPredictBlobUrl(data.id);
 
         res.status(200).json({
             status: "success",
