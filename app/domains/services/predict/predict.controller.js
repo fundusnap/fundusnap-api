@@ -1,6 +1,6 @@
 const Service = require('../services.model').Service;
-const { uploadPredictImageBuffer, getPredictBlobUrl, uploadDetectImageBuffer, getDetectBlobUrl } = require('../../../configs/storage/azure/blobStorage');
-const fileType = require('file-type');
+const { uploadPredictImageBuffer, getPredictBlobUrl, uploadDetectImageBuffer, getDetectBlobUrl } = require('../../../configs/storage/cloudflare-r2/r2.client');
+const { fileTypeFromBuffer } = require('../../../utils/file/fileType');
 const axios = require('axios');
 const FormData = require('form-data');
 
@@ -14,7 +14,7 @@ const create = async (req, res) => {
             });
         }
 
-        const type = await fileType.fileTypeFromBuffer(req.body);
+        const type = fileTypeFromBuffer(req.body);
         
         if (!type || !type.mime.startsWith('image/')) {
             return res.status(400).json({
