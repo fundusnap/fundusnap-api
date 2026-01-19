@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "app/index.js",
   "scripts": {
-    "start": "node app/index.js",
-    "dev": "nodemon app/index.js"
+    "start": "bun app/index.js",
+    "dev": "bun --watch app/index.js"
   },
   "repository": {
     "type": "git",
@@ -22,13 +22,10 @@
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
-    "file-type": "^21.0.0",
     "form-data": "^4.0.4",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.2",
+    "node-cloudflare-r2": "^0.5.1",
     "nodemailer": "^7.0.3"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.9"
   }
 }
