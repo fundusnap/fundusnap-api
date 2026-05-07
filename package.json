@@ -14,21 +14,24 @@
   "license": "MIT",
   "description": "Fundusnap API is a backend service for the Fundusnap mobile app that helps you identify signs of diabetic retinopathy",
   "dependencies": {
-    "@azure/storage-blob": "^12.27.0",
-    "axios": "^1.10.0",
+    "@azure/storage-blob": "^12.31.0",
+    "axios": "^1.16.0",
     "bcrypt": "^6.0.0",
-    "body-parser": "^1.20.3",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "ejs": "^3.1.10",
-    "express": "^4.21.2",
-    "form-data": "^4.0.4",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.9.2",
+    "body-parser": "^2.2.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "ejs": "^5.0.2",
+    "express": "^5.2.1",
+    "form-data": "^4.0.5",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.6.1",
     "node-cloudflare-r2": "^0.5.1",
     "nodemailer": "^8.0.7"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.14"
+  },
+  "overrides": {
+    "fast-xml-parser": "^5.7.3"
   }
 }
