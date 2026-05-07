@@ -11,7 +11,7 @@ Fundusnap API is a backend service for the Fundusnap mobile app that helps ident
 - **Storage**: Azure Blob Storage
 - **AI Services**: 
   - Microsoft Azure Custom Vision API (for image classification)
-  - OpenRouter API with Microsoft MAI-DS-R1 model (for medical chat interactions)
+  - OpenRouter API with Microsoft Phi 4 Mini Instruct model (for medical chat interactions)
 - **Email Service**: Nodemailer
 - **Other Dependencies**:
   - bcrypt (password hashing)
@@ -22,7 +22,7 @@ Fundusnap API is a backend service for the Fundusnap mobile app that helps ident
 
 ## 🏥 Medical AI Model
 
-The application uses Microsoft's MAI-DS-R1 model through OpenRouter API for medical chat interactions. This model is specifically trained for medical domain conversations and is optimized for discussing medical conditions, test results, and providing healthcare-related information. The model is used to help explain diabetic retinopathy predictions and answer user questions about their retinal health in a medically accurate and helpful manner.
+The application uses Microsoft's Phi 4 Mini Instruct model through OpenRouter API for medical chat interactions. This model is specifically trained for medical domain conversations and is optimized for discussing medical conditions, test results, and providing healthcare-related information. The model is used to help explain diabetic retinopathy predictions and answer user questions about their retinal health in a medically accurate and helpful manner.
 
 ## ☁️ Infrastructure & Security
 
