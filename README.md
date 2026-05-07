@@ -1,3 +1,20 @@
+<div align="center">
+  <table border="1">
+    <tr>
+      <td align="center" style="padding: 20px;">
+        <h3>📢 Domain & Email Migration Notice</h3>
+        <p>From <b>May 30th, 2026</b>, Fundusnap will transition to new domains as <code>fundusnap.com</code> will not be renewed:</p>
+        <p>🌐 <b>Website:</b> <a href="https://fundusnap.faizath.com">fundusnap.faizath.com</a> (formerly <i>fundusnap.com</i>)<br>
+        ⚙️ <b>API:</b> <a href="https://fundusnap-api.faizath.com">fundusnap-api.faizath.com</a> (formerly <i>api.fundusnap.com</i>)<br>
+        📧 <b>Email:</b> <a href="mailto:contact@fundusnap.faizath.com">contact@fundusnap.faizath.com</a> (formerly <i>contact@fundusnap.com</i>)<br>
+        🛰️ <b>CDN:</b> <a>fundusnap-cdn.faizath.com</a> (formerly <i>cdn.fundusnap.com</i>)<br>
+        📈 <b>Status Pages:</b> <a href="https://status.faizath.com/status/fundusnap">https://status.faizath.com/status/fundusnap</a> (formerly <i>status.fundusnap.com</i>)
+        </p>
+      </td>
+    </tr>
+  </table>
+</div>
+
 # Fundusnap API
 
 Fundusnap API is a backend service for the Fundusnap mobile app that helps identify signs of diabetic retinopathy. This service provides endpoints for user authentication, image analysis, and AI-powered chat interactions about retinal health.
@@ -11,7 +28,7 @@ Fundusnap API is a backend service for the Fundusnap mobile app that helps ident
 - **Storage**: Azure Blob Storage
 - **AI Services**: 
   - Microsoft Azure Custom Vision API (for image classification)
-  - OpenRouter API with Microsoft MAI-DS-R1 model (for medical chat interactions)
+  - OpenRouter API with Microsoft Phi 4 Mini Instruct model (for medical chat interactions)
 - **Email Service**: Nodemailer
 - **Other Dependencies**:
   - bcrypt (password hashing)
@@ -22,7 +39,7 @@ Fundusnap API is a backend service for the Fundusnap mobile app that helps ident
 
 ## 🏥 Medical AI Model
 
-The application uses Microsoft's MAI-DS-R1 model through OpenRouter API for medical chat interactions. This model is specifically trained for medical domain conversations and is optimized for discussing medical conditions, test results, and providing healthcare-related information. The model is used to help explain diabetic retinopathy predictions and answer user questions about their retinal health in a medically accurate and helpful manner.
+The application uses Microsoft's Phi 4 Mini Instruct model through OpenRouter API for medical chat interactions. This model is specifically trained for medical domain conversations and is optimized for discussing medical conditions, test results, and providing healthcare-related information. The model is used to help explain diabetic retinopathy predictions and answer user questions about their retinal health in a medically accurate and helpful manner.
 
 ## ☁️ Infrastructure & Security
 
@@ -184,4 +201,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 👥 Authors
 
-Fundusnap Developers <dev@fundunsnap.com>
+Fundusnap Developers <dev@fundusnap.faizath.com>
